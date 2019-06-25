@@ -11,9 +11,7 @@ export default class Lightbox extends Component {
     renderContent:   PropTypes.func,
     underlayColor:   PropTypes.string,
     backgroundColor: PropTypes.string,
-    didOpen:         PropTypes.func,
     onOpen:          PropTypes.func,
-    willClose:       PropTypes.func,
     onClose:         PropTypes.func,
     springConfig:    PropTypes.shape({
       tension:       PropTypes.number,
@@ -25,8 +23,6 @@ export default class Lightbox extends Component {
   static defaultProps = {
     swipeToDismiss: true,
     onOpen: () => {},
-    didOpen: () => {},
-    willClose: () => {},
     onClose: () => {},
   };
 
@@ -61,8 +57,6 @@ export default class Lightbox extends Component {
     springConfig: this.props.springConfig,
     backgroundColor: this.props.backgroundColor,
     children: this.getContent(),
-    didOpen: this.props.didOpen,
-    willClose: this.props.willClose,
     onClose: this.onClose,
   })
 
@@ -80,7 +74,6 @@ export default class Lightbox extends Component {
           y: py,
         },
       }, () => {
-        this.props.didOpen();
         if(this.props.navigator) {
           const route = {
             component: LightboxOverlay,
@@ -117,6 +110,10 @@ export default class Lightbox extends Component {
     }
   }
 
+  onClickClose = () => {
+    this.props.resetZoomScale()
+  }
+
   render() {
     // measure will not return anything useful if we dont attach a onLayout handler on android
     return (
@@ -133,7 +130,7 @@ export default class Lightbox extends Component {
             {this.props.children}
           </TouchableHighlight>
         </Animated.View>
-        {this.props.navigator ? false : <LightboxOverlay {...this.getOverlayProps()} />}
+        {this.props.navigator ? false : <LightboxOverlay clickClose={this.onClickClose} {...this.getOverlayProps()} />}
       </View>
     );
   }
