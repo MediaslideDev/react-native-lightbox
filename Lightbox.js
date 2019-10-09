@@ -111,7 +111,7 @@ export default class Lightbox extends Component {
   }
 
   onClickClose = () => {
-    this.props.resetZoomScale()
+    if(this.props.resetZoomScale) this.props.resetZoomScale()
   }
 
   render() {
